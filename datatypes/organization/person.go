@@ -6,14 +6,32 @@ import (
 	"strings"
 )
 
-type Handler struct {
-	handle string
-	name   string
+// type Handler struct {
+// 	handle string
+// 	name   string
+// }
+
+// //This function can not be found publicly unless you use a Type Alias for TwitterHandler, e.g. type TwitterHandler = Handler
+// func (h Handler) RandomStuff() {
+
+// }
+
+type Employee struct {
+	Name
 }
 
-//This function can not be found publicly unless you use a Type Alias (with the = sign)
-func (h Handler) RandomStuff() {
+type Person struct {
+	//This is a way of embedding the Name struct instead of using 'name Name', now instead of using p.Name.first we can do p.First
+	Name
+	twitterHandler TwitterHandler
+}
+type Name struct {
+	first string
+	last  string
+}
 
+func (n *Name) FullName() string {
+	return fmt.Sprintf("%s %s", n.first, n.last)
 }
 
 type TwitterHandler string
@@ -27,25 +45,18 @@ type Identifiable interface {
 	ID() string
 }
 
-type Person struct {
-	firstName      string
-	lastName       string
-	twitterHandler TwitterHandler
-}
-
 //Can use in place of a constructor
 func NewPerson(firstName, lastName string) Person {
 	return Person{
-		firstName: firstName,
-		lastName:  lastName,
+		Name: Name{
+			first: firstName,
+			last:  lastName,
+		},
 	}
 }
 
-func (p *Person) FullName() string {
-	return fmt.Sprintf("%s %s", p.firstName, p.lastName)
-}
-
 func (p *Person) ID() string {
+
 	return "12345"
 }
 
