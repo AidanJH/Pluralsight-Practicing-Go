@@ -24,6 +24,7 @@ type Person struct {
 	//This is a way of embedding the Name struct instead of using 'name Name', now instead of using p.Name.first we can do p.First
 	Name
 	twitterHandler TwitterHandler
+	Identifiable
 }
 type Name struct {
 	first string
@@ -45,20 +46,30 @@ type Identifiable interface {
 	ID() string
 }
 
+type socialSecurityNumber string
+
+func NewSocialSecurityNumber(value string) Identifiable {
+	return socialSecurityNumber(value)
+}
+
+func (ssn socialSecurityNumber) ID() string {
+	return string(ssn)
+}
+
 //Can use in place of a constructor
-func NewPerson(firstName, lastName string) Person {
+func NewPerson(firstName, lastName string, identifiable Identifiable) Person {
 	return Person{
 		Name: Name{
 			first: firstName,
 			last:  lastName,
 		},
+		Identifiable: identifiable,
 	}
 }
 
-func (p *Person) ID() string {
-
-	return "12345"
-}
+// func (p *Person) ID() string {
+// 	return "12345"
+// }
 
 func (p *Person) SetTwitterHandler(handler TwitterHandler) error {
 	//We are setting this here to prevent errors for 0 length handlers, prevents null maybe?
